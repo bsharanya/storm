@@ -135,6 +135,15 @@
         debug? (= true (storm-conf TOPOLOGY-DEBUG))]
         
     (fn ([^Integer out-task-id ^String stream ^List values]
+          (log-message " ***** Capturing additional information start 2 ***** ")
+          (log-message out-task-id)
+          (log-message " ********** ")
+          (log-message component-id)
+          (log-message " ********** ")
+          (log-message stream)
+          (log-message " ********** ")
+          (log-message values)
+          (log-message " ***** Capturing additional information end 2 ***** ")
           (when debug?
             (log-message "Emitting direct: " out-task-id "; " component-id " " stream " " values))
           (let [target-component (.getComponentId worker-context out-task-id)
@@ -153,6 +162,15 @@
             (if out-task-id [out-task-id])
             ))
         ([^String stream ^List values]
+          (log-message " ***** Capturing additional information start 1 ***** ")
+          (log-message component-id)
+          (log-message " ********** ")
+          (log-message stream)
+          (log-message " ********** ")
+          (log-message values)
+          (log-message " ********** ")
+          (log-message "Emitting: " component-id " " stream " " values)
+          (log-message " ***** Capturing additional information end 1 ***** ")
            (when debug?
              (log-message "Emitting: " component-id " " stream " " values))
            (let [out-tasks (ArrayList.)]

@@ -40,6 +40,7 @@
   (:import [backtype.storm.daemon.common StormBase Assignment])
   (:use [backtype.storm.daemon common])
   (:import [org.apache.zookeeper data.ACL ZooDefs$Ids ZooDefs$Perms])
+  (:import [backtype.storm.multinenantstela StelaMonitor])
   (:gen-class
     :methods [^{:static true} [launch [backtype.storm.scheduler.INimbus] void]]))
 
@@ -70,6 +71,15 @@
     scheduler
     ))
 
+; Multitenant Stela
+(defn mk-stela-monitor [conf]
+  (let [stela-monitor (StelaMonitor. conf)]
+    stela-monitor
+    ))
+
+(defn run-stela-monitor [stela-monitor]
+  (.collect stela-monitor))
+
 (def NIMBUS-ZK-ACLS
   [(first ZooDefs$Ids/CREATOR_ALL_ACL) 
    (ACL. (bit-or ZooDefs$Perms/READ ZooDefs$Perms/CREATE) ZooDefs$Ids/ANYONE_ID_UNSAFE)])
@@ -97,6 +107,7 @@
                                  (exit-process! 20 "Error when processing an event")
                                  ))
      :scheduler (mk-scheduler conf inimbus)
+     :stela-monitor (mk-stela-monitor conf)
      :id->sched-status (atom {})
      :cred-renewers (AuthUtils/GetCredentialRenewers conf)
      :nimbus-autocred-plugins (AuthUtils/getNimbusAutoCredPlugins conf)
@@ -1037,6 +1048,13 @@
                         (conf NIMBUS-CREDENTIAL-RENEW-FREQ-SECS)
                         (fn []
                           (renew-credentials nimbus)))
+
+    ; Multitenant Stela
+    (schedule-recurring (:timer nimbus)
+      0
+      10
+      (fn []
+        (run-stela-monitor (:stela-monitor nimbus))))
 
     (reify Nimbus$Iface
       (^void submitTopologyWithOpts
