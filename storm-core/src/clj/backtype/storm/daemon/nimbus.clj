@@ -14,7 +14,8 @@
 ;; See the License for the specific language governing permissions and
 ;; limitations under the License.
 (ns backtype.storm.daemon.nimbus
-  (:import [org.apache.thrift.server THsHaServer THsHaServer$Args])
+  (:import [org.apache.thrift.server THsHaServer THsHaServer$Args]
+           [backtype.storm.scheduler.advancedstela.slo StelaSLOObserver])
   (:import [org.apache.thrift.protocol TBinaryProtocol TBinaryProtocol$Factory])
   (:import [org.apache.thrift.exception])
   (:import [org.apache.thrift.transport TNonblockingServerTransport TNonblockingServerSocket])
@@ -40,8 +41,17 @@
   (:import [backtype.storm.daemon.common StormBase Assignment])
   (:use [backtype.storm.daemon common])
   (:import [org.apache.zookeeper data.ACL ZooDefs$Ids ZooDefs$Perms])
+  (:import [backtype.storm.scheduler.advancedstela.slo.StelaSLOObserver])
   (:gen-class
     :methods [^{:static true} [launch [backtype.storm.scheduler.INimbus] void]]))
+
+(defn mk-stela-observer [conf]
+  (let [stela-observer (StelaSLOObserver. conf)]
+    stela-observer
+    ))
+
+(defn run-stela-observer [stela-observer]
+  (.run stela-observer))
 
 (defn file-cache-map [conf]
   (TimeCacheMap.
@@ -96,6 +106,7 @@
                                  (log-error t "Error when processing event")
                                  (exit-process! 20 "Error when processing an event")
                                  ))
+     :stela-observer (mk-stela-observer conf)
      :scheduler (mk-scheduler conf inimbus)
      :id->sched-status (atom {})
      :cred-renewers (AuthUtils/GetCredentialRenewers conf)
@@ -1037,6 +1048,12 @@
                         (conf NIMBUS-CREDENTIAL-RENEW-FREQ-SECS)
                         (fn []
                           (renew-credentials nimbus)))
+
+    (schedule-recurring (:timer nimbus)
+      0
+      30
+      (fn []
+        (run-stela-observer (:stela-observer nimbus))))
 
     (reify Nimbus$Iface
       (^void submitTopologyWithOpts
