@@ -57,7 +57,7 @@ public class StelaComponent {
     }
 
     public void setCurrentTransferred(Integer currentTransferred) {
-        this.currentTransferred = currentTransferred;
+        this.currentTransferred = currentTransferred - totalTransferred;
     }
 
     public void addTotalExecuted(String key, Integer value) {
@@ -68,7 +68,7 @@ public class StelaComponent {
     }
 
     public void addCurrentExecuted(String key, Integer value) {
-        currentExecuted.put(key, value);
+        currentExecuted.put(key, value - totalExecuted.get(key));
     }
 
     @Override
