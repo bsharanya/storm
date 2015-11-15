@@ -6,11 +6,21 @@ public class StelaTopology {
     private String id;
     private HashMap<String, StelaComponent> spouts;
     private HashMap<String, StelaComponent> bolts;
+    private Double userSpecifiedSlo;
 
-    public StelaTopology(String topologyId) {
+    public StelaTopology(String topologyId, Double slo) {
         id = topologyId;
+        userSpecifiedSlo = slo;
         spouts = new HashMap<>();
         bolts = new HashMap<>();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public Double getUserSpecifiedSlo() {
+        return userSpecifiedSlo;
     }
 
     public void addSpout(String id, StelaComponent component) {

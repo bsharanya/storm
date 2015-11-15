@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,7 @@ package backtype.storm;
 import backtype.storm.serialization.IKryoDecorator;
 import backtype.storm.serialization.IKryoFactory;
 import com.esotericsoftware.kryo.Serializer;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -240,25 +241,25 @@ public class Config extends HashMap<String, Object> {
     /**
      * The number of times to retry a Zookeeper operation.
      */
-    public static final String STORM_ZOOKEEPER_RETRY_TIMES="storm.zookeeper.retry.times";
+    public static final String STORM_ZOOKEEPER_RETRY_TIMES = "storm.zookeeper.retry.times";
     public static final Object STORM_ZOOKEEPER_RETRY_TIMES_SCHEMA = ConfigValidation.IntegerValidator;
 
     /**
      * The interval between retries of a Zookeeper operation.
      */
-    public static final String STORM_ZOOKEEPER_RETRY_INTERVAL="storm.zookeeper.retry.interval";
+    public static final String STORM_ZOOKEEPER_RETRY_INTERVAL = "storm.zookeeper.retry.interval";
     public static final Object STORM_ZOOKEEPER_RETRY_INTERVAL_SCHEMA = ConfigValidation.IntegerValidator;
 
     /**
      * The ceiling of the interval between retries of a Zookeeper operation.
      */
-    public static final String STORM_ZOOKEEPER_RETRY_INTERVAL_CEILING="storm.zookeeper.retry.intervalceiling.millis";
+    public static final String STORM_ZOOKEEPER_RETRY_INTERVAL_CEILING = "storm.zookeeper.retry.intervalceiling.millis";
     public static final Object STORM_ZOOKEEPER_RETRY_INTERVAL_CEILING_SCHEMA = ConfigValidation.IntegerValidator;
 
     /**
      * The cluster Zookeeper authentication scheme to use, e.g. "digest". Defaults to no authentication.
      */
-    public static final String STORM_ZOOKEEPER_AUTH_SCHEME="storm.zookeeper.auth.scheme";
+    public static final String STORM_ZOOKEEPER_AUTH_SCHEME = "storm.zookeeper.auth.scheme";
     public static final Object STORM_ZOOKEEPER_AUTH_SCHEME_SCHEMA = String.class;
 
     /**
@@ -270,19 +271,19 @@ public class Config extends HashMap<String, Object> {
      * This file storm-cluster-auth.yaml should then be protected with
      * appropriate permissions that deny access from workers.
      */
-    public static final String STORM_ZOOKEEPER_AUTH_PAYLOAD="storm.zookeeper.auth.payload";
+    public static final String STORM_ZOOKEEPER_AUTH_PAYLOAD = "storm.zookeeper.auth.payload";
     public static final Object STORM_ZOOKEEPER_AUTH_PAYLOAD_SCHEMA = String.class;
 
     /**
      * The topology Zookeeper authentication scheme to use, e.g. "digest". Defaults to no authentication.
      */
-    public static final String STORM_ZOOKEEPER_TOPOLOGY_AUTH_SCHEME="storm.zookeeper.topology.auth.scheme";
+    public static final String STORM_ZOOKEEPER_TOPOLOGY_AUTH_SCHEME = "storm.zookeeper.topology.auth.scheme";
     public static final Object STORM_ZOOKEEPER_TOPOLOGY_AUTH_SCHEME_SCHEMA = String.class;
 
     /**
      * A string representing the payload for topology Zookeeper authentication. It gets serialized using UTF-8 encoding during authentication.
      */
-    public static final String STORM_ZOOKEEPER_TOPOLOGY_AUTH_PAYLOAD="storm.zookeeper.topology.auth.payload";
+    public static final String STORM_ZOOKEEPER_TOPOLOGY_AUTH_PAYLOAD = "storm.zookeeper.topology.auth.payload";
     public static final Object STORM_ZOOKEEPER_TOPOLOGY_AUTH_PAYLOAD_SCHEMA = String.class;
 
     /**
@@ -294,19 +295,19 @@ public class Config extends HashMap<String, Object> {
     /**
      * The number of times to retry a Nimbus operation.
      */
-    public static final String STORM_NIMBUS_RETRY_TIMES="storm.nimbus.retry.times";
+    public static final String STORM_NIMBUS_RETRY_TIMES = "storm.nimbus.retry.times";
     public static final Object STORM_NIMBUS_RETRY_TIMES_SCHEMA = Number.class;
 
     /**
      * The starting interval between exponential backoff retries of a Nimbus operation.
      */
-    public static final String STORM_NIMBUS_RETRY_INTERVAL="storm.nimbus.retry.interval.millis";
+    public static final String STORM_NIMBUS_RETRY_INTERVAL = "storm.nimbus.retry.interval.millis";
     public static final Object STORM_NIMBUS_RETRY_INTERVAL_SCHEMA = Number.class;
 
     /**
      * The ceiling of the interval between retries of a client connect to Nimbus operation.
      */
-    public static final String STORM_NIMBUS_RETRY_INTERVAL_CEILING="storm.nimbus.retry.intervalceiling.millis";
+    public static final String STORM_NIMBUS_RETRY_INTERVAL_CEILING = "storm.nimbus.retry.intervalceiling.millis";
     public static final Object STORM_NIMBUS_RETRY_INTERVAL_CEILING_SCHEMA = Number.class;
 
     /**
@@ -785,7 +786,7 @@ public class Config extends HashMap<String, Object> {
      * timeout based on the socket timeout on the DRPC client, and separately based on the topology message
      * timeout for the topology implementing the DRPC function.
      */
-    public static final String DRPC_REQUEST_TIMEOUT_SECS  = "drpc.request.timeout.secs";
+    public static final String DRPC_REQUEST_TIMEOUT_SECS = "drpc.request.timeout.secs";
     public static final Object DRPC_REQUEST_TIMEOUT_SECS_SCHEMA = ConfigValidation.IntegerValidator;
 
     /**
@@ -1076,7 +1077,7 @@ public class Config extends HashMap<String, Object> {
      * By setting this config to true, Storm will ignore that it doesn't have those other serializations
      * rather than throw an error.
      */
-    public static final String TOPOLOGY_SKIP_MISSING_KRYO_REGISTRATIONS= "topology.skip.missing.kryo.registrations";
+    public static final String TOPOLOGY_SKIP_MISSING_KRYO_REGISTRATIONS = "topology.skip.missing.kryo.registrations";
     public static final Object TOPOLOGY_SKIP_MISSING_KRYO_REGISTRATIONS_SCHEMA = Boolean.class;
 
     /*
@@ -1092,7 +1093,7 @@ public class Config extends HashMap<String, Object> {
      * The maximum parallelism allowed for a component in this topology. This configuration is
      * typically used in testing to limit the number of threads spawned in local mode.
      */
-    public static final String TOPOLOGY_MAX_TASK_PARALLELISM="topology.max.task.parallelism";
+    public static final String TOPOLOGY_MAX_TASK_PARALLELISM = "topology.max.task.parallelism";
     public static final Object TOPOLOGY_MAX_TASK_PARALLELISM_SCHEMA = ConfigValidation.IntegerValidator;
 
 
@@ -1104,7 +1105,7 @@ public class Config extends HashMap<String, Object> {
      * Note that this config parameter has no effect for unreliable spouts that don't tag
      * their tuples with a message id.
      */
-    public static final String TOPOLOGY_MAX_SPOUT_PENDING="topology.max.spout.pending";
+    public static final String TOPOLOGY_MAX_SPOUT_PENDING = "topology.max.spout.pending";
     public static final Object TOPOLOGY_MAX_SPOUT_PENDING_SCHEMA = ConfigValidation.IntegerValidator;
 
     /**
@@ -1114,64 +1115,64 @@ public class Config extends HashMap<String, Object> {
      * 1. nextTuple emits no tuples
      * 2. The spout has hit maxSpoutPending and can't emit any more tuples
      */
-    public static final String TOPOLOGY_SPOUT_WAIT_STRATEGY="topology.spout.wait.strategy";
+    public static final String TOPOLOGY_SPOUT_WAIT_STRATEGY = "topology.spout.wait.strategy";
     public static final Object TOPOLOGY_SPOUT_WAIT_STRATEGY_SCHEMA = String.class;
 
     /**
      * The amount of milliseconds the SleepEmptyEmitStrategy should sleep for.
      */
-    public static final String TOPOLOGY_SLEEP_SPOUT_WAIT_STRATEGY_TIME_MS="topology.sleep.spout.wait.strategy.time.ms";
+    public static final String TOPOLOGY_SLEEP_SPOUT_WAIT_STRATEGY_TIME_MS = "topology.sleep.spout.wait.strategy.time.ms";
     public static final Object TOPOLOGY_SLEEP_SPOUT_WAIT_STRATEGY_TIME_MS_SCHEMA = ConfigValidation.IntegerValidator;
 
     /**
      * The maximum amount of time a component gives a source of state to synchronize before it requests
      * synchronization again.
      */
-    public static final String TOPOLOGY_STATE_SYNCHRONIZATION_TIMEOUT_SECS="topology.state.synchronization.timeout.secs";
+    public static final String TOPOLOGY_STATE_SYNCHRONIZATION_TIMEOUT_SECS = "topology.state.synchronization.timeout.secs";
     public static final Object TOPOLOGY_STATE_SYNCHRONIZATION_TIMEOUT_SECS_SCHEMA = ConfigValidation.IntegerValidator;
 
     /**
      * The percentage of tuples to sample to produce stats for a task.
      */
-    public static final String TOPOLOGY_STATS_SAMPLE_RATE="topology.stats.sample.rate";
-    public static final Object TOPOLOGY_STATS_SAMPLE_RATE_SCHEMA =ConfigValidation.PositiveNumberValidator;
+    public static final String TOPOLOGY_STATS_SAMPLE_RATE = "topology.stats.sample.rate";
+    public static final Object TOPOLOGY_STATS_SAMPLE_RATE_SCHEMA = ConfigValidation.PositiveNumberValidator;
 
     /**
      * The time period that builtin metrics data in bucketed into.
      */
-    public static final String TOPOLOGY_BUILTIN_METRICS_BUCKET_SIZE_SECS="topology.builtin.metrics.bucket.size.secs";
+    public static final String TOPOLOGY_BUILTIN_METRICS_BUCKET_SIZE_SECS = "topology.builtin.metrics.bucket.size.secs";
     public static final Object TOPOLOGY_BUILTIN_METRICS_BUCKET_SIZE_SECS_SCHEMA = ConfigValidation.IntegerValidator;
 
     /**
      * Whether or not to use Java serialization in a topology.
      */
-    public static final String TOPOLOGY_FALL_BACK_ON_JAVA_SERIALIZATION="topology.fall.back.on.java.serialization";
+    public static final String TOPOLOGY_FALL_BACK_ON_JAVA_SERIALIZATION = "topology.fall.back.on.java.serialization";
     public static final Object TOPOLOGY_FALL_BACK_ON_JAVA_SERIALIZATION_SCHEMA = Boolean.class;
 
     /**
      * Topology-specific options for the worker child process. This is used in addition to WORKER_CHILDOPTS.
      */
-    public static final String TOPOLOGY_WORKER_CHILDOPTS="topology.worker.childopts";
+    public static final String TOPOLOGY_WORKER_CHILDOPTS = "topology.worker.childopts";
     public static final Object TOPOLOGY_WORKER_CHILDOPTS_SCHEMA = ConfigValidation.StringOrStringListValidator;
 
     /**
      * Topology-specific options GC for the worker child process. This overrides WORKER_GC_CHILDOPTS.
      */
-    public static final String TOPOLOGY_WORKER_GC_CHILDOPTS="topology.worker.gc.childopts";
+    public static final String TOPOLOGY_WORKER_GC_CHILDOPTS = "topology.worker.gc.childopts";
     public static final Object TOPOLOGY_WORKER_GC_CHILDOPTS_SCHEMA = ConfigValidation.StringOrStringListValidator;
 
     /**
      * Topology-specific classpath for the worker child process. This is combined to the usual classpath.
      */
-    public static final String TOPOLOGY_CLASSPATH="topology.classpath";
+    public static final String TOPOLOGY_CLASSPATH = "topology.classpath";
     public static final Object TOPOLOGY_CLASSPATH_SCHEMA = ConfigValidation.StringOrStringListValidator;
 
     /**
      * Topology-specific environment variables for the worker child process.
      * This is added to the existing environment (that of the supervisor)
      */
-     public static final String TOPOLOGY_ENVIRONMENT="topology.environment";
-     public static final Object TOPOLOGY_ENVIRONMENT_SCHEMA = Map.class;
+    public static final String TOPOLOGY_ENVIRONMENT = "topology.environment";
+    public static final Object TOPOLOGY_ENVIRONMENT_SCHEMA = Map.class;
 
     /*
      * Topology-specific option to disable/enable bolt's outgoing overflow buffer.
@@ -1180,7 +1181,7 @@ public class Config extends HashMap<String, Object> {
      * The overflow buffer can fill degrading the performance gradually,
      * eventually running out of memory.
      */
-    public static final String TOPOLOGY_BOLTS_OUTGOING_OVERFLOW_BUFFER_ENABLE="topology.bolts.outgoing.overflow.buffer.enable";
+    public static final String TOPOLOGY_BOLTS_OUTGOING_OVERFLOW_BUFFER_ENABLE = "topology.bolts.outgoing.overflow.buffer.enable";
     public static final Object TOPOLOGY_BOLTS_OUTGOING_OVERFLOW_BUFFER_ENABLE_SCHEMA = Boolean.class;
 
     /**
@@ -1188,7 +1189,7 @@ public class Config extends HashMap<String, Object> {
      * the transactional topology. This id is used to store the state of the transactional
      * topology in Zookeeper.
      */
-    public static final String TOPOLOGY_TRANSACTIONAL_ID="topology.transactional.id";
+    public static final String TOPOLOGY_TRANSACTIONAL_ID = "topology.transactional.id";
     public static final Object TOPOLOGY_TRANSACTIONAL_ID_SCHEMA = String.class;
 
     /**
@@ -1196,48 +1197,48 @@ public class Config extends HashMap<String, Object> {
      * of when you'd do this is to add a hook that integrates with your internal
      * monitoring system. These hooks are instantiated using the zero-arg constructor.
      */
-    public static final String TOPOLOGY_AUTO_TASK_HOOKS="topology.auto.task.hooks";
+    public static final String TOPOLOGY_AUTO_TASK_HOOKS = "topology.auto.task.hooks";
     public static final Object TOPOLOGY_AUTO_TASK_HOOKS_SCHEMA = ConfigValidation.StringsValidator;
 
 
     /**
      * The size of the Disruptor receive queue for each executor. Must be a power of 2.
      */
-    public static final String TOPOLOGY_EXECUTOR_RECEIVE_BUFFER_SIZE="topology.executor.receive.buffer.size";
+    public static final String TOPOLOGY_EXECUTOR_RECEIVE_BUFFER_SIZE = "topology.executor.receive.buffer.size";
     public static final Object TOPOLOGY_EXECUTOR_RECEIVE_BUFFER_SIZE_SCHEMA = ConfigValidation.PowerOf2Validator;
 
     /**
      * The size of the Disruptor send queue for each executor. Must be a power of 2.
      */
-    public static final String TOPOLOGY_EXECUTOR_SEND_BUFFER_SIZE="topology.executor.send.buffer.size";
+    public static final String TOPOLOGY_EXECUTOR_SEND_BUFFER_SIZE = "topology.executor.send.buffer.size";
     public static final Object TOPOLOGY_EXECUTOR_SEND_BUFFER_SIZE_SCHEMA = ConfigValidation.PowerOf2Validator;
 
     /**
      * The size of the Disruptor transfer queue for each worker.
      */
-    public static final String TOPOLOGY_TRANSFER_BUFFER_SIZE="topology.transfer.buffer.size";
+    public static final String TOPOLOGY_TRANSFER_BUFFER_SIZE = "topology.transfer.buffer.size";
     public static final Object TOPOLOGY_TRANSFER_BUFFER_SIZE_SCHEMA = ConfigValidation.IntegerValidator;
 
-   /**
-    * How often a tick tuple from the "__system" component and "__tick" stream should be sent
-    * to tasks. Meant to be used as a component-specific configuration.
-    */
-    public static final String TOPOLOGY_TICK_TUPLE_FREQ_SECS="topology.tick.tuple.freq.secs";
+    /**
+     * How often a tick tuple from the "__system" component and "__tick" stream should be sent
+     * to tasks. Meant to be used as a component-specific configuration.
+     */
+    public static final String TOPOLOGY_TICK_TUPLE_FREQ_SECS = "topology.tick.tuple.freq.secs";
     public static final Object TOPOLOGY_TICK_TUPLE_FREQ_SECS_SCHEMA = ConfigValidation.IntegerValidator;
 
 
-   /**
-    * Configure the wait strategy used for internal queuing. Can be used to tradeoff latency
-    * vs. throughput
-    */
-    public static final String TOPOLOGY_DISRUPTOR_WAIT_STRATEGY="topology.disruptor.wait.strategy";
+    /**
+     * Configure the wait strategy used for internal queuing. Can be used to tradeoff latency
+     * vs. throughput
+     */
+    public static final String TOPOLOGY_DISRUPTOR_WAIT_STRATEGY = "topology.disruptor.wait.strategy";
     public static final Object TOPOLOGY_DISRUPTOR_WAIT_STRATEGY_SCHEMA = String.class;
 
-   /**
-    * The size of the shared thread pool for worker tasks to make use of. The thread pool can be accessed
-    * via the TopologyContext.
-    */
-    public static final String TOPOLOGY_WORKER_SHARED_THREAD_POOL_SIZE="topology.worker.shared.thread.pool.size";
+    /**
+     * The size of the shared thread pool for worker tasks to make use of. The thread pool can be accessed
+     * via the TopologyContext.
+     */
+    public static final String TOPOLOGY_WORKER_SHARED_THREAD_POOL_SIZE = "topology.worker.shared.thread.pool.size";
     public static final Object TOPOLOGY_WORKER_SHARED_THREAD_POOL_SIZE_SCHEMA = ConfigValidation.IntegerValidator;
 
     /**
@@ -1245,26 +1246,26 @@ public class Config extends HashMap<String, Object> {
      * an interval of 10 seconds with topology.max.error.report.per.interval set to 5 will only allow 5 errors to be
      * reported to Zookeeper per task for every 10 second interval of time.
      */
-    public static final String TOPOLOGY_ERROR_THROTTLE_INTERVAL_SECS="topology.error.throttle.interval.secs";
+    public static final String TOPOLOGY_ERROR_THROTTLE_INTERVAL_SECS = "topology.error.throttle.interval.secs";
     public static final Object TOPOLOGY_ERROR_THROTTLE_INTERVAL_SECS_SCHEMA = ConfigValidation.IntegerValidator;
 
     /**
      * See doc for TOPOLOGY_ERROR_THROTTLE_INTERVAL_SECS
      */
-    public static final String TOPOLOGY_MAX_ERROR_REPORT_PER_INTERVAL="topology.max.error.report.per.interval";
+    public static final String TOPOLOGY_MAX_ERROR_REPORT_PER_INTERVAL = "topology.max.error.report.per.interval";
     public static final Object TOPOLOGY_MAX_ERROR_REPORT_PER_INTERVAL_SCHEMA = ConfigValidation.IntegerValidator;
 
 
     /**
      * How often a batch can be emitted in a Trident topology.
      */
-    public static final String TOPOLOGY_TRIDENT_BATCH_EMIT_INTERVAL_MILLIS="topology.trident.batch.emit.interval.millis";
+    public static final String TOPOLOGY_TRIDENT_BATCH_EMIT_INTERVAL_MILLIS = "topology.trident.batch.emit.interval.millis";
     public static final Object TOPOLOGY_TRIDENT_BATCH_EMIT_INTERVAL_MILLIS_SCHEMA = ConfigValidation.IntegerValidator;
 
     /**
      * Name of the topology. This config is automatically set by Storm when the topology is submitted.
      */
-    public final static String TOPOLOGY_NAME="topology.name";
+    public final static String TOPOLOGY_NAME = "topology.name";
     public static final Object TOPOLOGY_NAME_SCHEMA = String.class;
 
     /**
@@ -1294,8 +1295,14 @@ public class Config extends HashMap<String, Object> {
     /**
      * Max pending tuples in one ShellBolt
      */
-    public static final String TOPOLOGY_SHELLBOLT_MAX_PENDING="topology.shellbolt.max.pending";
+    public static final String TOPOLOGY_SHELLBOLT_MAX_PENDING = "topology.shellbolt.max.pending";
     public static final Object TOPOLOGY_SHELLBOLT_MAX_PENDING_SCHEMA = ConfigValidation.IntegerValidator;
+
+    /**
+     * Topology SLO specified by the user
+     */
+    public static final String TOPOLOGY_SLO = "topology.slo";
+    public static final Object TOPOLOGY_SLO_SCHEMA = ConfigValidation.SLOValidator;
 
     /**
      * Topology central logging sensitivity to determine who has access to logs in central logging system.
@@ -1305,33 +1312,33 @@ public class Config extends HashMap<String, Object> {
      *   S2 - Confidential
      *   S3 - Secret (default.)
      */
-    public static final String TOPOLOGY_LOGGING_SENSITIVITY="topology.logging.sensitivity";
+    public static final String TOPOLOGY_LOGGING_SENSITIVITY = "topology.logging.sensitivity";
     public static final Object TOPOLOGY_LOGGING_SENSITIVITY_SCHEMA = String.class;
 
     /**
      * The root directory in ZooKeeper for metadata about TransactionalSpouts.
      */
-    public static final String TRANSACTIONAL_ZOOKEEPER_ROOT="transactional.zookeeper.root";
+    public static final String TRANSACTIONAL_ZOOKEEPER_ROOT = "transactional.zookeeper.root";
     public static final Object TRANSACTIONAL_ZOOKEEPER_ROOT_SCHEMA = String.class;
 
     /**
      * The list of zookeeper servers in which to keep the transactional state. If null (which is default),
      * will use storm.zookeeper.servers
      */
-    public static final String TRANSACTIONAL_ZOOKEEPER_SERVERS="transactional.zookeeper.servers";
+    public static final String TRANSACTIONAL_ZOOKEEPER_SERVERS = "transactional.zookeeper.servers";
     public static final Object TRANSACTIONAL_ZOOKEEPER_SERVERS_SCHEMA = ConfigValidation.StringsValidator;
 
     /**
      * The port to use to connect to the transactional zookeeper servers. If null (which is default),
      * will use storm.zookeeper.port
      */
-    public static final String TRANSACTIONAL_ZOOKEEPER_PORT="transactional.zookeeper.port";
+    public static final String TRANSACTIONAL_ZOOKEEPER_PORT = "transactional.zookeeper.port";
     public static final Object TRANSACTIONAL_ZOOKEEPER_PORT_SCHEMA = ConfigValidation.IntegerValidator;
 
     /**
      * The user as which the nimbus client should be acquired to perform the operation.
      */
-    public static final String STORM_DO_AS_USER="storm.doAsUser";
+    public static final String STORM_DO_AS_USER = "storm.doAsUser";
     public static final Object STORM_DO_AS_USER_SCHEMA = String.class;
 
     /**
@@ -1397,7 +1404,7 @@ public class Config extends HashMap<String, Object> {
      * Configure timeout milliseconds used for disruptor queue wait strategy. Can be used to tradeoff latency
      * vs. CPU usage
      */
-    public static final String TOPOLOGY_DISRUPTOR_WAIT_TIMEOUT_MILLIS="topology.disruptor.wait.timeout.millis";
+    public static final String TOPOLOGY_DISRUPTOR_WAIT_TIMEOUT_MILLIS = "topology.disruptor.wait.timeout.millis";
     public static final Object TOPOLOGY_DISRUPTOR_WAIT_TIMEOUT_MILLIS_SCHEMA = ConfigValidation.PositiveIntegerValidator;
 
     public static void setClasspath(Map conf, String cp) {
@@ -1472,14 +1479,16 @@ public class Config extends HashMap<String, Object> {
         m.put("parallelism.hint", parallelismHint);
         m.put("argument", argument);
 
-        List l = (List)conf.get(TOPOLOGY_METRICS_CONSUMER_REGISTER);
-        if (l == null) { l = new ArrayList(); }
+        List l = (List) conf.get(TOPOLOGY_METRICS_CONSUMER_REGISTER);
+        if (l == null) {
+            l = new ArrayList();
+        }
         l.add(m);
         conf.put(TOPOLOGY_METRICS_CONSUMER_REGISTER, l);
     }
 
     public void registerMetricsConsumer(Class klass, Object argument, long parallelismHint) {
-       registerMetricsConsumer(this, klass, argument, parallelismHint);
+        registerMetricsConsumer(this, klass, argument, parallelismHint);
     }
 
     public static void registerMetricsConsumer(Map conf, Class klass, long parallelismHint) {
@@ -1519,7 +1528,7 @@ public class Config extends HashMap<String, Object> {
     }
 
     public void setSkipMissingKryoRegistrations(boolean skip) {
-       setSkipMissingKryoRegistrations(this, skip);
+        setSkipMissingKryoRegistrations(this, skip);
     }
 
     public static void setMaxTaskParallelism(Map conf, int max) {
@@ -1554,9 +1563,28 @@ public class Config extends HashMap<String, Object> {
         setFallBackOnJavaSerialization(this, fallback);
     }
 
+
+    public static void setTopologySlo(Map conf, double slo) {
+        conf.put(Config.TOPOLOGY_SLO, slo);
+    }
+
+    public void setTopologySlo(double slo) {
+        setTopologySlo(this, slo);
+    }
+
+    public static double getTopologySlo(Map conf) {
+        double ret = 0.0;
+        if (!conf.containsKey(Config.TOPOLOGY_SLO)) {
+            ret = 0.0;
+        } else {
+            ret = (double) conf.get(Config.TOPOLOGY_SLO);
+        }
+        return ret;
+    }
+
     private static List getRegisteredSerializations(Map conf) {
         List ret;
-        if(!conf.containsKey(Config.TOPOLOGY_KRYO_REGISTER)) {
+        if (!conf.containsKey(Config.TOPOLOGY_KRYO_REGISTER)) {
             ret = new ArrayList();
         } else {
             ret = new ArrayList((List) conf.get(Config.TOPOLOGY_KRYO_REGISTER));
@@ -1567,7 +1595,7 @@ public class Config extends HashMap<String, Object> {
 
     private static List getRegisteredDecorators(Map conf) {
         List ret;
-        if(!conf.containsKey(Config.TOPOLOGY_KRYO_DECORATORS)) {
+        if (!conf.containsKey(Config.TOPOLOGY_KRYO_DECORATORS)) {
             ret = new ArrayList();
         } else {
             ret = new ArrayList((List) conf.get(Config.TOPOLOGY_KRYO_DECORATORS));

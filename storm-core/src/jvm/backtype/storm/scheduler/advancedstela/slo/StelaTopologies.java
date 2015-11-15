@@ -4,12 +4,17 @@ import backtype.storm.Config;
 import backtype.storm.generated.*;
 import backtype.storm.utils.NimbusClient;
 import org.apache.thrift.TException;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class StelaTopologies {
+    private static final Logger LOG = LoggerFactory.getLogger(StelaTopologies.class);
 
     private Map config;
     private NimbusClient nimbusClient;
@@ -36,7 +41,9 @@ public class StelaTopologies {
                     String id = topologySummary.get_id();
 
                     if (!stelaTopologies.containsKey(id)) {
-                        StelaTopology stelaTopology = new StelaTopology(id);
+                        Double userSpecifiedSlo = getUserSpecifiedSLOFromConfig(id);
+
+                        StelaTopology stelaTopology = new StelaTopology(id, userSpecifiedSlo);
                         StormTopology stormTopology = nimbusClient.getClient().getTopology(id);
 
                         addSpoutsAndBolts(stormTopology, stelaTopology);
@@ -49,6 +56,18 @@ public class StelaTopologies {
                 e.printStackTrace();
             }
         }
+    }
+
+    private Double getUserSpecifiedSLOFromConfig(String id) throws TException {
+        Double topologySLO = 1.0;
+        JSONParser parser = new JSONParser();
+        try {
+            Map conf = (Map) parser.parse(nimbusClient.getClient().getTopologyConf(id));
+            topologySLO = (Double) conf.get(Config.TOPOLOGY_SLO);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return topologySLO;
     }
 
     private void addSpoutsAndBolts(StormTopology stormTopology, StelaTopology stelaTopology) throws TException {
@@ -69,18 +88,21 @@ public class StelaTopologies {
 
     private void constructTopologyGraph(StormTopology topology, StelaTopology stelaTopology) {
         for (Map.Entry<String, Bolt> bolt : topology.get_bolts().entrySet()) {
-            StelaComponent stelaComponent = stelaTopology.getBolts().get(bolt.getKey());
+            if (!bolt.getKey().matches("(__).*")) {
+                StelaComponent stelaComponent = stelaTopology.getBolts().get(bolt.getKey());
 
-            for (Map.Entry<GlobalStreamId, Grouping> parent : bolt.getValue().get_common().get_inputs().entrySet()) {
-                String parentId = parent.getKey().get_componentId();
+                for (Map.Entry<GlobalStreamId, Grouping> parent : bolt.getValue().get_common().get_inputs().entrySet())
+                {
+                    String parentId = parent.getKey().get_componentId();
 
-                if (stelaTopology.getBolts().get(parentId) == null) {
-                    stelaTopology.getSpouts().get(parentId).addChild(stelaComponent.getId());
-                } else {
-                    stelaTopology.getBolts().get(parentId).addChild(stelaComponent.getId());
+                    if (stelaTopology.getBolts().get(parentId) == null) {
+                        stelaTopology.getSpouts().get(parentId).addChild(stelaComponent.getId());
+                    } else {
+                        stelaTopology.getBolts().get(parentId).addChild(stelaComponent.getId());
+                    }
+
+                    stelaComponent.addParent(parentId);
                 }
-
-                stelaComponent.addParent(parentId);
             }
         }
     }
