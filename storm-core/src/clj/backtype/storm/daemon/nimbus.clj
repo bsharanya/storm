@@ -40,7 +40,7 @@
   (:import [backtype.storm.daemon.common StormBase Assignment])
   (:use [backtype.storm.daemon common])
   (:import [org.apache.zookeeper data.ACL ZooDefs$Ids ZooDefs$Perms])
-  (:import [backtype.storm.scheduler.advancedstela.slo.StelaSLOObserver])
+  (:import [backtype.storm.scheduler.advancedstela.slo StelaSLOObserver])
   (:gen-class
     :methods [^{:static true} [launch [backtype.storm.scheduler.INimbus] void]]))
 
