@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 public class StelaTopologies {
-    private static final Logger LOG = LoggerFactory.getLogger(StelaTopologies.class);
-
     private Map config;
     private NimbusClient nimbusClient;
     private HashMap<String, StelaTopology> stelaTopologies;

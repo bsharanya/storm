@@ -12,7 +12,7 @@ public class StelaComponent {
     private Integer currentTransferred;
     private HashMap<String, Integer> totalExecuted;
     private HashMap<String, Integer> currentExecuted;
-    private HashMap<String, Float> spoutTransfer;
+    private HashMap<String, Double> spoutTransfer;
 
     public StelaComponent(String key, int parallelismHint) {
         id = key;
@@ -62,11 +62,11 @@ public class StelaComponent {
         return currentExecuted;
     }
 
-    public HashMap<String, Float> getSpoutTransfer() {
+    public HashMap<String, Double> getSpoutTransfer() {
         return spoutTransfer;
     }
 
-    public void addSpoutTransfer(String key, Float value) {
+    public void addSpoutTransfer(String key, Double value) {
         spoutTransfer.put(key, value);
     }
 
