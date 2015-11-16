@@ -14,8 +14,7 @@
 ;; See the License for the specific language governing permissions and
 ;; limitations under the License.
 (ns backtype.storm.daemon.nimbus
-  (:import [org.apache.thrift.server THsHaServer THsHaServer$Args]
-           [backtype.storm.scheduler.advancedstela.slo StelaSLOObserver SLOObserver SLOObserver])
+  (:import [org.apache.thrift.server THsHaServer THsHaServer$Args])
   (:import [org.apache.thrift.protocol TBinaryProtocol TBinaryProtocol$Factory])
   (:import [org.apache.thrift.exception])
   (:import [org.apache.thrift.transport TNonblockingServerTransport TNonblockingServerSocket])
@@ -41,9 +40,9 @@
   (:import [backtype.storm.daemon.common StormBase Assignment])
   (:use [backtype.storm.daemon common])
   (:import [org.apache.zookeeper data.ACL ZooDefs$Ids ZooDefs$Perms])
-  (:import [backtype.storm.scheduler.advancedstela.slo SLOObserver]))
-(:gen-class
-  :methods [^{:static true} [launch [backtype.storm.scheduler.INimbus] void]])
+  (:import [backtype.storm.scheduler.advancedstela.slo.StelaSLOObserver])
+  (:gen-class
+    :methods [^{:static true} [launch [backtype.storm.scheduler.INimbus] void]]))
 
 (defn mk-stela-observer [conf]
   (let [stela-observer (StelaSLOObserver. conf)]

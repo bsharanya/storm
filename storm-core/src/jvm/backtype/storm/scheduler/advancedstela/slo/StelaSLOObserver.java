@@ -12,8 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-public class SLOObserver {
-    private static final Logger LOG = LoggerFactory.getLogger(SLOObserver.class);
+public class StelaSLOObserver {
+    private static final Logger LOG = LoggerFactory.getLogger(StelaSLOObserver.class);
     private static final String ALL_TIME = ":all-time";
     private static final String METRICS = "__metrics";
     private static final String SYSTEM = "__system";
@@ -22,7 +22,7 @@ public class SLOObserver {
     private StelaTopologies stelaTopologies;
     private NimbusClient nimbusClient;
 
-    public SLOObserver(Map conf) {
+    public StelaSLOObserver(Map conf) {
         config = conf;
         stelaTopologies = new StelaTopologies(config);
     }
