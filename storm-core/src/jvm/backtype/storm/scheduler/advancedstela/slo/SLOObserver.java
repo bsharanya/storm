@@ -7,13 +7,10 @@ import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class StelaSLOObserver {
-    private static final Logger LOG = LoggerFactory.getLogger(StelaSLOObserver.class);
+public class SLOObserver {
+    private static final Logger LOG = LoggerFactory.getLogger(SLOObserver.class);
     private static final String ALL_TIME = ":all-time";
     private static final String METRICS = "__metrics";
     private static final String SYSTEM = "__system";
@@ -22,12 +19,16 @@ public class StelaSLOObserver {
     private StelaTopologies stelaTopologies;
     private NimbusClient nimbusClient;
 
-    public StelaSLOObserver(Map conf) {
+    public SLOObserver(Map conf) {
         config = conf;
         stelaTopologies = new StelaTopologies(config);
     }
 
-    public void run() {
+    public synchronized TopologyPair getTopologiesToBeRescaled() {
+        return stelaTopologies.getTopologyPairScaling();
+    }
+
+    public synchronized void run() {
         if (config != null) {
             try {
                 nimbusClient = new NimbusClient(config, (String) config.get(Config.NIMBUS_HOST),

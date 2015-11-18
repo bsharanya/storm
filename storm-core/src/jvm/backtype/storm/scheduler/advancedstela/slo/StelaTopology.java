@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class StelaTopology {
+public class StelaTopology implements Comparable<StelaTopology> {
     private String id;
     private Double userSpecifiedSLO;
     private Queue<Double> measuredSLOs;
@@ -34,7 +34,7 @@ public class StelaTopology {
         measuredSLOs.add(value);
     }
 
-    public Double getMeasuredSLOs() {
+    public Double getMeasuredSLO() {
         int count = 0;
         double result = 0.0;
         for (Double value : measuredSLOs) {
@@ -65,5 +65,14 @@ public class StelaTopology {
         components.putAll(spouts);
         components.putAll(bolts);
         return components;
+    }
+
+    @Override
+    public int compareTo(StelaTopology other) {
+        return getMeasuredSLO().compareTo(other.getMeasuredSLO());
+    }
+
+    public boolean sloViolated() {
+        return getMeasuredSLO() < userSpecifiedSLO;
     }
 }

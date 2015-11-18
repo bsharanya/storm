@@ -6,12 +6,8 @@ import backtype.storm.utils.NimbusClient;
 import org.apache.thrift.TException;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class StelaTopologies {
     private Map config;
@@ -25,6 +21,28 @@ public class StelaTopologies {
 
     public HashMap<String, StelaTopology> getStelaTopologies() {
         return stelaTopologies;
+    }
+
+    public TopologyPair getTopologyPairScaling() {
+        ArrayList<StelaTopology> failingTopologies  = new ArrayList<>();
+        ArrayList<StelaTopology> successfulTopologies  = new ArrayList<>();
+
+        for (StelaTopology topology: stelaTopologies.values()) {
+            if (topology.sloViolated()) {
+                failingTopologies.add(topology);
+            } else {
+                successfulTopologies.add(topology);
+            }
+        }
+
+        Collections.sort(failingTopologies);
+        Collections.sort(successfulTopologies);
+
+        TopologyPair topologyPair = new TopologyPair();
+        topologyPair.setReceiver(failingTopologies.get(failingTopologies.size() - 1));
+        topologyPair.setGiver(successfulTopologies.get(0));
+
+        return topologyPair;
     }
 
     public void constructTopologyGraphs() {

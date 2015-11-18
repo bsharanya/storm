@@ -1407,6 +1407,12 @@ public class Config extends HashMap<String, Object> {
     public static final String TOPOLOGY_DISRUPTOR_WAIT_TIMEOUT_MILLIS = "topology.disruptor.wait.timeout.millis";
     public static final Object TOPOLOGY_DISRUPTOR_WAIT_TIMEOUT_MILLIS_SCHEMA = ConfigValidation.PositiveIntegerValidator;
 
+    /**
+     * Configure time interval at which Advanced Stela SLO Observer runs.
+     */
+    public static final String STELA_SLO_OBSERVER_INTERVAL = "nimbus.stela.slo.observer.interval";
+    public static final Object STELA_SLO_OBSERVER_INTERVAL_SCHEMA = ConfigValidation.IntegerValidator;
+
     public static void setClasspath(Map conf, String cp) {
         conf.put(Config.TOPOLOGY_CLASSPATH, cp);
     }

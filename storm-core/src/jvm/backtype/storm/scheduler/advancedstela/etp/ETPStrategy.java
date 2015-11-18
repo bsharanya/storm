@@ -73,8 +73,6 @@ public class ETPStrategy {
 	}
 
 	private HashMap<Component, Double> CongestionDetection() {
-		// TODO Auto-generated method stub
-		
 		for( Map.Entry<Component, Double> i : executeRateMap.entrySet()) {
 			Double out=i.getValue();
 			Double in=0.0;
