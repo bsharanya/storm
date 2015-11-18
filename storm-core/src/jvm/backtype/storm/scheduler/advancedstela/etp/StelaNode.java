@@ -1,4 +1,4 @@
-package backtype.storm.scheduler.advancedstela;
+package backtype.storm.scheduler.advancedstela.etp;
 
 import backtype.storm.scheduler.ExecutorDetails;
 import backtype.storm.scheduler.SupervisorDetails;

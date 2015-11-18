@@ -1,4 +1,4 @@
-package backtype.storm.scheduler.advancedstela;
+package backtype.storm.scheduler.advancedstela.etp;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

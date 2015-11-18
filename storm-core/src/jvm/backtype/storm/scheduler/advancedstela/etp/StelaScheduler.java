@@ -1,4 +1,4 @@
-package backtype.storm.scheduler.advancedstela;
+package backtype.storm.scheduler.advancedstela.etp;
 
 import backtype.storm.scheduler.Cluster;
 import backtype.storm.scheduler.IScheduler;
