@@ -3,7 +3,7 @@ package backtype.storm.scheduler.advancedstela.slo;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class StelaComponent {
+public class Component {
     private String id;
     private int parallelism;
     private HashSet<String> parents;
@@ -14,7 +14,7 @@ public class StelaComponent {
     private HashMap<String, Integer> currentExecuted;
     private HashMap<String, Double> spoutTransfer;
 
-    public StelaComponent(String key, int parallelismHint) {
+    public Component(String key, int parallelismHint) {
         id = key;
         parallelism = parallelismHint;
         parents = new HashSet<>();
@@ -122,7 +122,7 @@ public class StelaComponent {
         }
         cE.append("]");
 
-        return "StelaComponent{" +
+        return "Component{" +
                 "id='" + id + '\'' +
                 ", parallelism=" + parallelism +
                 ", parents=" + p.toString() +

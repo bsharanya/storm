@@ -9,23 +9,23 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class SLOObserver {
-    private static final Logger LOG = LoggerFactory.getLogger(SLOObserver.class);
+public class Observer {
+    private static final Logger LOG = LoggerFactory.getLogger(Observer.class);
     private static final String ALL_TIME = ":all-time";
     private static final String METRICS = "__metrics";
     private static final String SYSTEM = "__system";
 
     private Map config;
-    private StelaTopologies stelaTopologies;
+    private Topologies topologies;
     private NimbusClient nimbusClient;
 
-    public SLOObserver(Map conf) {
+    public Observer(Map conf) {
         config = conf;
-        stelaTopologies = new StelaTopologies(config);
+        topologies = new Topologies(config);
     }
 
-    public synchronized TopologyPair getTopologiesToBeRescaled() {
-        return stelaTopologies.getTopologyPairScaling();
+    public synchronized TopologyPairs getTopologiesToBeRescaled() {
+        return topologies.getTopologyPairScaling();
     }
 
     public synchronized void run() {
@@ -33,8 +33,8 @@ public class SLOObserver {
             try {
                 nimbusClient = new NimbusClient(config, (String) config.get(Config.NIMBUS_HOST),
                         (Integer) config.get(Config.NIMBUS_THRIFT_PORT));
-                stelaTopologies.constructTopologyGraphs();
-                HashMap<String, StelaTopology> allTopologies = stelaTopologies.getStelaTopologies();
+                topologies.constructTopologyGraphs();
+                HashMap<String, Topology> allTopologies = topologies.getStelaTopologies();
 
                 collectStatistics(allTopologies);
                 calculateSloPerSource(allTopologies);
@@ -46,15 +46,15 @@ public class SLOObserver {
         }
     }
 
-    private void collectStatistics(HashMap<String, StelaTopology> allTopologies) throws TException {
+    private void collectStatistics(HashMap<String, Topology> allTopologies) throws TException {
         for (String topologyId : allTopologies.keySet()) {
-            StelaTopology stelaTopology = allTopologies.get(topologyId);
+            Topology topology = allTopologies.get(topologyId);
             TopologyInfo topologyInfo = nimbusClient.getClient().getTopologyInfo(topologyId);
             List<ExecutorSummary> executorSummaries = topologyInfo.get_executors();
 
             for (ExecutorSummary executor : executorSummaries) {
                 String componentId = executor.get_component_id();
-                StelaComponent stelaComponent = stelaTopology.getAllComponents().get(componentId);
+                Component component = topology.getAllComponents().get(componentId);
 
                 ExecutorStats stats = executor.get_stats();
                 if (stats == null) {
@@ -69,25 +69,25 @@ public class SLOObserver {
                     Map<String, Long> statValues = transferred.get(ALL_TIME);
                     for (String key : statValues.keySet()) {
                         if (!(key.equals(METRICS) || key.equals(SYSTEM))) {
-                            stelaComponent.setCurrentTransferred(statValues.get(key).intValue());
-                            stelaComponent.setTotalTransferred(statValues.get(key).intValue());
+                            component.setCurrentTransferred(statValues.get(key).intValue());
+                            component.setTotalTransferred(statValues.get(key).intValue());
                         }
                     }
                 } else {
                     Map<String, Long> statValues = transferred.get(ALL_TIME);
                     for (String key : statValues.keySet()) {
                         if (!(key.equals(METRICS) || key.equals(SYSTEM))) {
-                            stelaComponent.setCurrentTransferred(statValues.get(key).intValue());
-                            stelaComponent.setTotalTransferred(statValues.get(key).intValue());
+                            component.setCurrentTransferred(statValues.get(key).intValue());
+                            component.setTotalTransferred(statValues.get(key).intValue());
                         }
                     }
 
                     Map<String, Map<GlobalStreamId, Long>> executed = specific.get_bolt().get_executed();
                     Map<GlobalStreamId, Long> executedStatValues = executed.get(ALL_TIME);
                     for (GlobalStreamId streamId : executedStatValues.keySet()) {
-                        stelaComponent.addCurrentExecuted(streamId.get_componentId(),
+                        component.addCurrentExecuted(streamId.get_componentId(),
                                 executedStatValues.get(streamId).intValue());
-                        stelaComponent.addTotalExecuted(streamId.get_componentId(),
+                        component.addTotalExecuted(streamId.get_componentId(),
                                 executedStatValues.get(streamId).intValue());
                     }
                 }
@@ -95,36 +95,36 @@ public class SLOObserver {
         }
     }
 
-    private void calculateSloPerSource(HashMap<String, StelaTopology> allTopologies) {
+    private void calculateSloPerSource(HashMap<String, Topology> allTopologies) {
         for (String topologyId : allTopologies.keySet()) {
-            StelaTopology stelaTopology = allTopologies.get(topologyId);
-            HashMap<String, StelaComponent> spouts = stelaTopology.getSpouts();
+            Topology topology = allTopologies.get(topologyId);
+            HashMap<String, Component> spouts = topology.getSpouts();
 
-            HashMap<String, StelaComponent> parents = new HashMap<>();
-            for (StelaComponent spout : spouts.values()) {
+            HashMap<String, Component> parents = new HashMap<>();
+            for (Component spout : spouts.values()) {
                 HashSet<String> children = spout.getChildren();
                 for (String child : children) {
-                    StelaComponent stelaComponent = stelaTopology.getAllComponents().get(child);
+                    Component component = topology.getAllComponents().get(child);
                     Integer currentTransferred = spout.getCurrentTransferred();
-                    Integer executed = stelaComponent.getCurrentExecuted().get(spout.getId());
+                    Integer executed = component.getCurrentExecuted().get(spout.getId());
 
                     if (executed == null) {
                         continue;
                     }
 
                     Double value = ((double) executed) / (double) currentTransferred;
-                    stelaComponent.addSpoutTransfer(spout.getId(), value);
-                    parents.put(child, stelaComponent);
+                    component.addSpoutTransfer(spout.getId(), value);
+                    parents.put(child, component);
                 }
             }
 
             while (!parents.isEmpty()) {
-                HashMap<String, StelaComponent> children = new HashMap<>();
-                for (StelaComponent bolt : parents.values()) {
+                HashMap<String, Component> children = new HashMap<>();
+                for (Component bolt : parents.values()) {
                     HashSet<String> boltChildren = bolt.getChildren();
 
                     for (String child : boltChildren) {
-                        StelaComponent stelaComponent = stelaTopology.getAllComponents().get(child);
+                        Component stelaComponent = topology.getAllComponents().get(child);
                         Integer currentTransferred = bolt.getCurrentTransferred();
                         Integer executed = stelaComponent.getCurrentExecuted().get(bolt.getId());
 
@@ -146,16 +146,16 @@ public class SLOObserver {
         }
     }
 
-    private void logFinalSourceSLOsPer(HashMap<String, StelaTopology> allTopologies) {
+    private void logFinalSourceSLOsPer(HashMap<String, Topology> allTopologies) {
         LOG.info("*************************************************");
 
         for (String topologyId : allTopologies.keySet()) {
             Double calculatedSLO = 0.0;
-            StelaTopology stelaTopology = allTopologies.get(topologyId);
+            Topology topology = allTopologies.get(topologyId);
 
-            LOG.info("Output SLO for topology {} is {}", topologyId, stelaTopology.getUserSpecifiedSLO());
+            LOG.info("Output SLO for topology {} is {}", topologyId, topology.getUserSpecifiedSLO());
 
-            for (StelaComponent bolt : stelaTopology.getBolts().values()) {
+            for (Component bolt : topology.getBolts().values()) {
                 if (bolt.getChildren().isEmpty()) {
                     for (Double sourceProportion : bolt.getSpoutTransfer().values()) {
                         calculatedSLO += sourceProportion;
@@ -163,8 +163,8 @@ public class SLOObserver {
                 }
             }
 
-            calculatedSLO = calculatedSLO / stelaTopology.getSpouts().size();
-            stelaTopology.setMeasuredSLOs(calculatedSLO);
+            calculatedSLO = calculatedSLO / topology.getSpouts().size();
+            topology.setMeasuredSLOs(calculatedSLO);
             LOG.info("Measure SLO for topology {} is {}", topologyId, calculatedSLO);
             LOG.info("*************************************************");
         }

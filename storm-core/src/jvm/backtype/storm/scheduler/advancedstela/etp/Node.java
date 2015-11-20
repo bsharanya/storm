@@ -9,24 +9,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-public class StelaNode {
-
+public class Node {
     public String supervisorId;
-    public SupervisorDetails supervisorDetails;
     public String hostname;
+    public SupervisorDetails supervisorDetails;
     public List<WorkerSlot> slots;
     public List<ExecutorDetails> executors;
     public Map<WorkerSlot, List<ExecutorDetails>> slotsToExecutors;
 
-    public StelaNode(SupervisorDetails details, List<WorkerSlot> assignableSlots) {
+    public Node(SupervisorDetails details, List<WorkerSlot> assignableSlots) {
         supervisorDetails = details;
         supervisorId = supervisorDetails.getId();
         hostname = supervisorDetails.getHost();
         slots = assignableSlots;
-        executors = new ArrayList<ExecutorDetails>();
+        executors = new ArrayList<>();
 
-        slotsToExecutors = new HashMap<WorkerSlot, List<ExecutorDetails>>();
+        slotsToExecutors = new HashMap<>();
         for (WorkerSlot ws : slots) {
             slotsToExecutors.put(ws, new ArrayList<ExecutorDetails>());
         }

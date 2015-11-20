@@ -9,25 +9,25 @@ import org.json.simple.parser.ParseException;
 
 import java.util.*;
 
-public class StelaTopologies {
+public class Topologies {
     private Map config;
     private NimbusClient nimbusClient;
-    private HashMap<String, StelaTopology> stelaTopologies;
+    private HashMap<String, Topology> stelaTopologies;
 
-    public StelaTopologies(Map conf) {
+    public Topologies(Map conf) {
         config = conf;
         stelaTopologies = new HashMap<>();
     }
 
-    public HashMap<String, StelaTopology> getStelaTopologies() {
+    public HashMap<String, Topology> getStelaTopologies() {
         return stelaTopologies;
     }
 
-    public TopologyPair getTopologyPairScaling() {
-        ArrayList<StelaTopology> failingTopologies  = new ArrayList<>();
-        ArrayList<StelaTopology> successfulTopologies  = new ArrayList<>();
+    public TopologyPairs getTopologyPairScaling() {
+        ArrayList<Topology> failingTopologies  = new ArrayList<>();
+        ArrayList<Topology> successfulTopologies  = new ArrayList<>();
 
-        for (StelaTopology topology: stelaTopologies.values()) {
+        for (Topology topology: stelaTopologies.values()) {
             if (topology.sloViolated()) {
                 failingTopologies.add(topology);
             } else {
@@ -38,9 +38,9 @@ public class StelaTopologies {
         Collections.sort(failingTopologies);
         Collections.sort(successfulTopologies);
 
-        TopologyPair topologyPair = new TopologyPair();
-        topologyPair.setReceiver(failingTopologies.get(failingTopologies.size() - 1));
-        topologyPair.setGiver(successfulTopologies.get(0));
+        TopologyPairs topologyPair = new TopologyPairs();
+        topologyPair.setReceivers(failingTopologies);
+        topologyPair.setGivers(successfulTopologies);
 
         return topologyPair;
     }
@@ -59,13 +59,13 @@ public class StelaTopologies {
                     if (!stelaTopologies.containsKey(id)) {
                         Double userSpecifiedSlo = getUserSpecifiedSLOFromConfig(id);
 
-                        StelaTopology stelaTopology = new StelaTopology(id, userSpecifiedSlo);
+                        Topology topology = new Topology(id, userSpecifiedSlo);
                         StormTopology stormTopology = nimbusClient.getClient().getTopology(id);
 
-                        addSpoutsAndBolts(stormTopology, stelaTopology);
-                        constructTopologyGraph(stormTopology, stelaTopology);
+                        addSpoutsAndBolts(stormTopology, topology);
+                        constructTopologyGraph(stormTopology, topology);
 
-                        stelaTopologies.put(id, stelaTopology);
+                        stelaTopologies.put(id, topology);
                     }
                 }
             } catch (TException e) {
@@ -86,38 +86,38 @@ public class StelaTopologies {
         return topologySLO;
     }
 
-    private void addSpoutsAndBolts(StormTopology stormTopology, StelaTopology stelaTopology) throws TException {
+    private void addSpoutsAndBolts(StormTopology stormTopology, Topology topology) throws TException {
         for (Map.Entry<String, SpoutSpec> spout : stormTopology.get_spouts().entrySet()) {
             if (!spout.getKey().matches("(__).*")) {
-                stelaTopology.addSpout(spout.getKey(), new StelaComponent(spout.getKey(),
+                topology.addSpout(spout.getKey(), new Component(spout.getKey(),
                         spout.getValue().get_common().get_parallelism_hint()));
             }
         }
 
         for (Map.Entry<String, Bolt> bolt : stormTopology.get_bolts().entrySet()) {
             if (!bolt.getKey().matches("(__).*")) {
-                stelaTopology.addBolt(bolt.getKey(), new StelaComponent(bolt.getKey(),
+                topology.addBolt(bolt.getKey(), new Component(bolt.getKey(),
                         bolt.getValue().get_common().get_parallelism_hint()));
             }
         }
     }
 
-    private void constructTopologyGraph(StormTopology topology, StelaTopology stelaTopology) {
+    private void constructTopologyGraph(StormTopology topology, Topology stelaTopology) {
         for (Map.Entry<String, Bolt> bolt : topology.get_bolts().entrySet()) {
             if (!bolt.getKey().matches("(__).*")) {
-                StelaComponent stelaComponent = stelaTopology.getBolts().get(bolt.getKey());
+                Component component = stelaTopology.getBolts().get(bolt.getKey());
 
                 for (Map.Entry<GlobalStreamId, Grouping> parent : bolt.getValue().get_common().get_inputs().entrySet())
                 {
                     String parentId = parent.getKey().get_componentId();
 
                     if (stelaTopology.getBolts().get(parentId) == null) {
-                        stelaTopology.getSpouts().get(parentId).addChild(stelaComponent.getId());
+                        stelaTopology.getSpouts().get(parentId).addChild(component.getId());
                     } else {
-                        stelaTopology.getBolts().get(parentId).addChild(stelaComponent.getId());
+                        stelaTopology.getBolts().get(parentId).addChild(component.getId());
                     }
 
-                    stelaComponent.addParent(parentId);
+                    component.addParent(parentId);
                 }
             }
         }

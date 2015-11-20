@@ -4,14 +4,14 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class StelaTopology implements Comparable<StelaTopology> {
+public class Topology implements Comparable<Topology> {
     private String id;
     private Double userSpecifiedSLO;
     private Queue<Double> measuredSLOs;
-    private HashMap<String, StelaComponent> spouts;
-    private HashMap<String, StelaComponent> bolts;
+    private HashMap<String, Component> spouts;
+    private HashMap<String, Component> bolts;
 
-    public StelaTopology(String topologyId, Double slo) {
+    public Topology(String topologyId, Double slo) {
         id = topologyId;
         userSpecifiedSLO = slo;
         measuredSLOs = new LinkedList<>();
@@ -44,31 +44,31 @@ public class StelaTopology implements Comparable<StelaTopology> {
         return (result / count);
     }
 
-    public void addSpout(String id, StelaComponent component) {
+    public void addSpout(String id, Component component) {
         spouts.put(id, component);
     }
 
-    public HashMap<String, StelaComponent> getSpouts() {
+    public HashMap<String, Component> getSpouts() {
         return spouts;
     }
 
-    public void addBolt(String id, StelaComponent component) {
+    public void addBolt(String id, Component component) {
         bolts.put(id, component);
     }
 
-    public HashMap<String, StelaComponent> getBolts() {
+    public HashMap<String, Component> getBolts() {
         return bolts;
     }
 
-    public HashMap<String, StelaComponent> getAllComponents() {
-        HashMap<String, StelaComponent> components = new HashMap<>();
+    public HashMap<String, Component> getAllComponents() {
+        HashMap<String, Component> components = new HashMap<>();
         components.putAll(spouts);
         components.putAll(bolts);
         return components;
     }
 
     @Override
-    public int compareTo(StelaTopology other) {
+    public int compareTo(Topology other) {
         return getMeasuredSLO().compareTo(other.getMeasuredSLO());
     }
 
