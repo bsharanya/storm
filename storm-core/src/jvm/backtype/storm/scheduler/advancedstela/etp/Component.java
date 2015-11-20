@@ -1,5 +1,6 @@
 package backtype.storm.scheduler.advancedstela.etp;
 
+import backtype.storm.generated.ExecutorSummary;
 import backtype.storm.scheduler.ExecutorDetails;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public class Component {
     private List<String> parents;
     private List<String> children;
     private List<ExecutorDetails> executorDetails;
+    private List<ExecutorSummary> executorSummaries;
 
     public Component(String identifier, int parallelismHint) {
         id = identifier;
@@ -18,6 +20,7 @@ public class Component {
         parents = new ArrayList<String>();
         children = new ArrayList<String>();
         executorDetails = new ArrayList<ExecutorDetails>();
+        executorSummaries = new ArrayList<>();
     }
 
     public String getId() {
@@ -40,6 +43,10 @@ public class Component {
         return executorDetails;
     }
 
+    public List<ExecutorSummary> getExecutorSummaries() {
+        return executorSummaries;
+    }
+
     public void addParent(String parentId) {
         parents.add(parentId);
     }
@@ -50,5 +57,9 @@ public class Component {
 
     public void addExecutor(ExecutorDetails executor) {
         executorDetails.add(executor);
+    }
+
+    public void addExecutorSummary(ExecutorSummary summary) {
+        executorSummaries.add(summary);
     }
 }

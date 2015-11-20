@@ -13,9 +13,9 @@ public class TopologySchedule {
     private HashMap<WorkerSlot, ArrayList<ExecutorDetails>> assignment;
     private HashMap<String, Component> components;
 
-    public TopologySchedule(String identifier, int wookerCount) {
+    public TopologySchedule(String identifier, int workerCount) {
         id = identifier;
-        numberOFWorkers = wookerCount;
+        numberOFWorkers = workerCount;
         components = new HashMap<>();
         executorToComponent = new HashMap<>();
         assignment = new HashMap<>();

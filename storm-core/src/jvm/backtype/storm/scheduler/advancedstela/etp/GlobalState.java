@@ -88,7 +88,7 @@ public class GlobalState {
     private void populateTopologyInformation() {
         try {
             List<TopologySummary> topologies = nimbusClient.getClient().getClusterInfo().get_topologies();
-            for (TopologySummary topologySummary: topologies) {
+            for (TopologySummary topologySummary : topologies) {
                 String id = topologySummary.get_id();
                 StormTopology topology = nimbusClient.getClient().getTopology(id);
                 TopologySchedule topologySchedule = new TopologySchedule(id, topologySummary.get_num_workers());
@@ -104,12 +104,12 @@ public class GlobalState {
     }
 
     private void populateTopologyWorkerSlotToExecutors(Cluster cluster) {
-        for (String topologyId: topologySchedules.keySet()) {
+        for (String topologyId : topologySchedules.keySet()) {
             SchedulerAssignment schedulerAssignment = cluster.getAssignmentById(topologyId);
             if (schedulerAssignment != null) {
                 TopologySchedule topologySchedule = topologySchedules.get(topologyId);
                 Map<ExecutorDetails, WorkerSlot> executorToSlot = schedulerAssignment.getExecutorToSlot();
-                for (Map.Entry<ExecutorDetails, WorkerSlot> mapping: executorToSlot.entrySet()) {
+                for (Map.Entry<ExecutorDetails, WorkerSlot> mapping : executorToSlot.entrySet()) {
                     topologySchedule.addAssignment(mapping.getValue(), mapping.getKey());
                 }
             }
@@ -117,13 +117,24 @@ public class GlobalState {
     }
 
     private void populateExecutorsForTopologyComponents(Topologies topologies) {
-        for (TopologyDetails topologyDetails: topologies.getTopologies()) {
-            TopologySchedule topologySchedule = topologySchedules.get(topologyDetails.getId());
-            for (Map.Entry<ExecutorDetails, String> executorToComponent: topologyDetails.getExecutorToComponent().entrySet()) {
-                Component component = topologySchedule.getComponents().get(executorToComponent.getValue());
-                component.addExecutor(executorToComponent.getKey());
-                topologySchedule.addExecutorToComponent(executorToComponent.getKey(), component.getId());
+        try {
+            for (TopologyDetails topologyDetails : topologies.getTopologies()) {
+                TopologyInfo topologyInformation = nimbusClient.getClient().getTopologyInfo(topologyDetails.getId());
+                TopologySchedule topologySchedule = topologySchedules.get(topologyDetails.getId());
+                for (Map.Entry<ExecutorDetails, String> executorToComponent :
+                        topologyDetails.getExecutorToComponent().entrySet()) {
+                    Component component = topologySchedule.getComponents().get(executorToComponent.getValue());
+                    component.addExecutor(executorToComponent.getKey());
+                    topologySchedule.addExecutorToComponent(executorToComponent.getKey(), component.getId());
+                }
+
+                for (ExecutorSummary executorSummary: topologyInformation.get_executors()) {
+                    Component component = topologySchedule.getComponents().get(executorSummary.get_component_id());
+                    component.addExecutorSummary(executorSummary);
+                }
             }
+        } catch (TException e) {
+            e.printStackTrace();
         }
     }
 
@@ -148,8 +159,7 @@ public class GlobalState {
             if (!bolt.getKey().matches("(__).*")) {
                 Component component = topologySchedule.getComponents().get(bolt.getKey());
 
-                for (Map.Entry<GlobalStreamId, Grouping> parent : bolt.getValue().get_common().get_inputs().entrySet())
-                {
+                for (Map.Entry<GlobalStreamId, Grouping> parent : bolt.getValue().get_common().get_inputs().entrySet()) {
                     String parentId = parent.getKey().get_componentId();
 
                     if (topologySchedule.getComponents().get(parentId) == null) {
