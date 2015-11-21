@@ -537,11 +537,11 @@
                             <pattern>com.fasterxml</pattern>
                             <shadedPattern>org.apache.storm.shade.com.fasterxml</shadedPattern>
                         </relocation>
-                        <relocation>
-                            <pattern>org.apache.thrift</pattern>
-                            <!-- This pattern is inconsistent for backwards compatibility purposes. -->
-                            <shadedPattern>org.apache.thrift7</shadedPattern>
-                        </relocation>
+                        <!--<relocation>-->
+                            <!--<pattern>org.apache.thrift</pattern>-->
+                            <!--&lt;!&ndash; This pattern is inconsistent for backwards compatibility purposes. &ndash;&gt;-->
+                            <!--<shadedPattern>org.apache.thrift7</shadedPattern>-->
+                        <!--</relocation>-->
                         <relocation>
                             <pattern>org.jboss.netty</pattern>
                             <shadedPattern>org.apache.storm.shade.org.jboss.netty</shadedPattern>
