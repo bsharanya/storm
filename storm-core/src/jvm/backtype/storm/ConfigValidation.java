@@ -347,4 +347,20 @@ public class ConfigValidation {
             this.fv.validateField(name, o);
         }
     };
+
+    public static Object SLOValidator = new FieldValidator() {
+        @Override
+        public void validateField(String name, Object o) throws IllegalArgumentException {
+            if (o == null) {
+                // A null value is acceptable.
+                return;
+            }
+            if(o instanceof Number) {
+                if(((Number)o).doubleValue() > 0.0 && ((Number)o).doubleValue() <= 1.0  ) {
+                    return;
+                }
+            }
+            throw new IllegalArgumentException("Field " + name + " must be a Positive Number");
+        }
+    };
 }

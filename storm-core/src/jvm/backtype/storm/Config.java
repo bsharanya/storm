@@ -1400,6 +1400,12 @@ public class Config extends HashMap<String, Object> {
     public static final String TOPOLOGY_DISRUPTOR_WAIT_TIMEOUT_MILLIS="topology.disruptor.wait.timeout.millis";
     public static final Object TOPOLOGY_DISRUPTOR_WAIT_TIMEOUT_MILLIS_SCHEMA = ConfigValidation.PositiveIntegerValidator;
 
+    public static final String TOPOLOGY_SLO="topology.slo";
+    public static final Object TOPOLOGY_SLO_SCHEMA = ConfigValidation.SLOValidator;
+
+    public static final String STELA_SLO_OBSERVER_INTERVAL = "nimbus.stela.slo.observer.interval";
+    public static final Object STELA_SLO_OBSERVER_INTERVAL_SCHEMA = ConfigValidation.IntegerValidator;
+
     public static void setClasspath(Map conf, String cp) {
         conf.put(Config.TOPOLOGY_CLASSPATH, cp);
     }
@@ -1472,7 +1478,7 @@ public class Config extends HashMap<String, Object> {
         m.put("parallelism.hint", parallelismHint);
         m.put("argument", argument);
 
-        List l = (List)conf.get(TOPOLOGY_METRICS_CONSUMER_REGISTER);
+        List l = (List) conf.get(TOPOLOGY_METRICS_CONSUMER_REGISTER);
         if (l == null) { l = new ArrayList(); }
         l.add(m);
         conf.put(TOPOLOGY_METRICS_CONSUMER_REGISTER, l);
@@ -1519,7 +1525,7 @@ public class Config extends HashMap<String, Object> {
     }
 
     public void setSkipMissingKryoRegistrations(boolean skip) {
-       setSkipMissingKryoRegistrations(this, skip);
+        setSkipMissingKryoRegistrations(this, skip);
     }
 
     public static void setMaxTaskParallelism(Map conf, int max) {
@@ -1552,6 +1558,27 @@ public class Config extends HashMap<String, Object> {
 
     public void setFallBackOnJavaSerialization(boolean fallback) {
         setFallBackOnJavaSerialization(this, fallback);
+    }
+
+    public static void setTopologySlo(Map conf, double slo) {
+        conf.put(Config.TOPOLOGY_SLO, slo);
+    }
+
+    public void setTopologySlo(double slo) {
+        setTopologySlo(this, slo);
+    }
+
+
+    public static double getTopologySlo(Map conf) {
+        double ret = 0.0;
+        if(!conf.containsKey(Config.TOPOLOGY_SLO)) {
+            ret = 0.0;
+        } else {
+            ret = (double) conf.get(Config.TOPOLOGY_SLO);
+        }
+
+        return ret;
+
     }
 
     private static List getRegisteredSerializations(Map conf) {
